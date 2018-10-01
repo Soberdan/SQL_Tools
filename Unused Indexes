@@ -1,14 +1,16 @@
 -- Unused Index Script
 -- Original Author: Pinal Dave 
-SELECT TOP 25 o.name AS ObjectName
+SELECT TOP 25 
+	 o.name AS ObjectName
 	,i.name AS IndexName
 	,i.index_id AS IndexID
-	,dm_ius.user_seeks AS UserSeek
+	,dm_ius.user_seeks AS UserSeeks
 	,dm_ius.user_scans AS UserScans
 	,dm_ius.user_lookups AS UserLookups
 	,dm_ius.user_updates AS UserUpdates
-	,p.TableRows
-	,'DROP INDEX ' + QUOTENAME(i.name) + ' ON ' + QUOTENAME(s.name) + '.' + QUOTENAME(OBJECT_NAME(dm_ius.OBJECT_ID)) AS 'drop statement'
+	,p.TableRowCount
+	/* Generate script to drop the unused index. */ 
+	,'DROP INDEX ' + QUOTENAME(i.name) + ' ON ' + QUOTENAME(s.name) + '.' + QUOTENAME(OBJECT_NAME(dm_ius.OBJECT_ID)) AS 'Drop Statement'
 FROM sys.dm_db_index_usage_stats dm_ius
 INNER JOIN sys.indexes i
 	ON i.index_id = dm_ius.index_id
